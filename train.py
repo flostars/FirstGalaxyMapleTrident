@@ -17,7 +17,7 @@ try:  # Optional dependency handled at runtime.
 except Exception:  # pragma: no cover - handled in runtime checks and missing libomp
     xgb = None
 
-from exoplanet_app import preprocess
+import preprocess
 
 ModelSource = Union[str, Path, bytes, IO[bytes], None]
 

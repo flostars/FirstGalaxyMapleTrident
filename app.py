@@ -7,7 +7,8 @@ from typing import Any, Dict, List, Optional
 import pandas as pd
 from fastapi import FastAPI, File, HTTPException, UploadFile
 
-from exoplanet_app import preprocess, train
+import preprocess
+import train
 
 app = FastAPI(title="Exoplanet Classifier", version="1.0.0")
 

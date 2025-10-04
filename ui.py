@@ -15,7 +15,8 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-from exoplanet_app import preprocess, train
+import preprocess
+import train
 
 st.set_page_config(page_title="Exoplanet Classifier", layout="wide")
 COSMIC_CSS = """
