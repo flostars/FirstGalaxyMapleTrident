@@ -349,11 +349,40 @@ class StreamlitTrainingMonitor:
             # Show helpful information
             st.info("""
             **💡 To start training monitoring:**
-            1. Go to the **Neural Training** tab
-            2. Upload training data or use default dataset
+            1. Go to the **⚡ Neural Training** tab
+            2. Select your preferred algorithm (Random Forest or XGBoost)
             3. Click **Train/Retrain** to start training
-            4. Return to this tab to monitor progress
+            4. Return to this tab to monitor real-time progress
+            
+            **🎯 Current Status:** No active training detected - this is normal when not training models.
             """)
+            
+            # Show what the monitoring will track when training is active
+            st.subheader("📊 What This Monitor Tracks:")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("""
+                **During Training:**
+                - 📈 Real-time progress percentage
+                - 🖥️ CPU usage monitoring
+                - 💾 Memory consumption
+                - ⏱️ Elapsed time tracking
+                - 📊 Training loss curves
+                - 🎯 Validation accuracy
+                """)
+            
+            with col2:
+                st.markdown("""
+                **System Metrics:**
+                - 🔄 Process detection
+                - 📋 Training script monitoring
+                - 💽 Cache management
+                - 📈 Performance analytics
+                - ⚡ Resource optimization
+                - 🎛️ Real-time updates
+                """)
     
     def display_training_summary(self):
         """Display training summary"""
