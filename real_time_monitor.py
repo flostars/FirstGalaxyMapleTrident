@@ -27,12 +27,17 @@ class TrainingMonitor:
         
     def find_training_process(self) -> Optional[psutil.Process]:
         """Find the active training process"""
+        training_scripts = ['train_real_data.py', 'train.py', 'train_advanced.py', 'quick_train_advanced.py']
+        
         for proc in psutil.process_iter(['pid', 'name', 'cmdline', 'cpu_percent', 'create_time']):
             try:
-                if proc.info['name'] == 'python3.11' and proc.info['cmdline']:
+                # Check for Python processes
+                if proc.info['name'] in ['python.exe', 'python', 'python3.11', 'python3'] and proc.info['cmdline']:
                     cmdline = ' '.join(proc.info['cmdline'])
-                    if 'train_real_data.py' in cmdline:
-                        return proc
+                    # Look for any training script
+                    for script in training_scripts:
+                        if script in cmdline:
+                            return proc
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 continue
         return None
@@ -340,6 +345,15 @@ class StreamlitTrainingMonitor:
             
         else:
             st.error(f"Training Status: {status['message']}")
+            
+            # Show helpful information
+            st.info("""
+            **💡 To start training monitoring:**
+            1. Go to the **Neural Training** tab
+            2. Upload training data or use default dataset
+            3. Click **Train/Retrain** to start training
+            4. Return to this tab to monitor progress
+            """)
     
     def display_training_summary(self):
         """Display training summary"""
@@ -355,6 +369,31 @@ class StreamlitTrainingMonitor:
             st.success("✅ Training is running")
         else:
             st.warning(f"⚠️ {status['message']}")
+            
+            # Show system information when no training is running
+            st.subheader("🖥️ System Information")
+            
+            try:
+                import psutil
+                
+                # Get system metrics
+                cpu_percent = psutil.cpu_percent(interval=1)
+                memory = psutil.virtual_memory()
+                disk = psutil.disk_usage('/')
+                
+                col1, col2, col3 = st.columns(3)
+                
+                with col1:
+                    st.metric("CPU Usage", f"{cpu_percent:.1f}%")
+                
+                with col2:
+                    st.metric("Memory Usage", f"{memory.percent:.1f}%")
+                
+                with col3:
+                    st.metric("Disk Usage", f"{disk.percent:.1f}%")
+                    
+            except Exception as e:
+                st.error(f"Error getting system info: {e}")
         
         # Statistics
         if 'loss_stats' in summary:
