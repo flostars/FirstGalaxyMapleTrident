@@ -286,7 +286,19 @@ __all__ = [
 
 
 if __name__ == "__main__":  # pragma: no cover - convenience entry point
-    metrics = train_from_base()
-    print("Training complete. Metrics:")
-    for key, value in metrics.items():
-        print(f"  {key}: {value:.3f}")
+    print("🚀 ExoVision AI Training Options:")
+    print("1. Basic Training (Random Forest/XGBoost)")
+    print("2. Advanced Training (Deep Learning)")
+    
+    choice = input("Select training method (1 or 2): ").strip()
+    
+    if choice == "2":
+        print("🚀 Starting Advanced Deep Learning Training...")
+        import train_advanced
+        train_advanced.main()
+    else:
+        print("🚀 Starting Basic Training...")
+        metrics = train_from_base()
+        print("Training complete. Metrics:")
+        for key, value in metrics.items():
+            print(f"  {key}: {value:.3f}")

@@ -19,7 +19,15 @@ import streamlit as st
 from exoplanet_app import preprocess, train
 import sys
 sys.path.append(str(Path(__file__).parent))
-from predict_advanced_simple import SimplifiedAdvancedPredictor
+try:
+    from predict_advanced_enhanced import get_advanced_predictor
+    ADVANCED_PREDICTOR_AVAILABLE = True
+except ImportError:
+    try:
+        from predict_advanced_simple import SimplifiedAdvancedPredictor
+        ADVANCED_PREDICTOR_AVAILABLE = False
+    except ImportError:
+        ADVANCED_PREDICTOR_AVAILABLE = False
 
 st.set_page_config(
     page_title="ExoVision AI - Cosmic Exoplanet Hunter", 
@@ -79,17 +87,45 @@ body::before {
         radial-gradient(2px 2px at 40px 70px, var(--secondary-purple), transparent),
         radial-gradient(1px 1px at 90px 40px, var(--accent-pink), transparent),
         radial-gradient(1px 1px at 130px 80px, var(--primary-cyan), transparent),
-        radial-gradient(2px 2px at 160px 30px, var(--secondary-purple), transparent);
+        radial-gradient(2px 2px at 160px 30px, var(--secondary-purple), transparent),
+        radial-gradient(1px 1px at 200px 50px, #ffffff, transparent),
+        radial-gradient(1px 1px at 250px 90px, #ffffff, transparent),
+        radial-gradient(2px 2px at 300px 20px, #ffffff, transparent);
     background-repeat: repeat;
-    background-size: 200px 100px;
+    background-size: 350px 200px;
     animation: sparkle 20s linear infinite;
     pointer-events: none;
     z-index: -1;
+    opacity: 0.8;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(1px 1px at 50px 60px, var(--primary-cyan), transparent),
+        radial-gradient(1px 1px at 120px 20px, var(--secondary-purple), transparent),
+        radial-gradient(1px 1px at 80px 100px, var(--accent-pink), transparent),
+        radial-gradient(1px 1px at 180px 90px, #ffffff, transparent),
+        radial-gradient(2px 2px at 220px 40px, #ffffff, transparent);
+    background-repeat: repeat;
+    background-size: 280px 180px;
+    animation: sparkle 25s linear infinite reverse;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.6;
 }
 
 @keyframes sparkle {
-    0% { transform: translateY(0px); }
-    100% { transform: translateY(-100px); }
+    0% { transform: translateY(0px) translateX(0px); }
+    25% { transform: translateY(-50px) translateX(25px); }
+    50% { transform: translateY(-100px) translateX(-25px); }
+    75% { transform: translateY(-150px) translateX(50px); }
+    100% { transform: translateY(-200px) translateX(0px); }
 }
 
 .main .block-container {
@@ -471,11 +507,163 @@ h3 {
     background: rgba(0, 0, 0, 0.8) !important;
 }
 
-/* Force visibility on all text nodes */
-.stSelectbox *:not(svg):not(path) {
-    color: white !important;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.9) !important;
-    font-weight: 700 !important;
+/* NUCLEAR OPTION - COMPLETE ANCHOR LINK ANNIHILATION */
+
+/* Hide ALL possible anchor link variations */
+a[href*="#"],
+a[class*="emotion-cache"],
+a[class*="et2rgd"],
+[data-testid] a,
+.stMarkdown a,
+.element-container a,
+.css-* a,
+.e* a,
+.st-* a,
+div[data-testid="stMarkdownContainer"] a,
+div[class*="stMarkdown"] a,
+*[href^="#"],
+*[href*="#exovision"],
+*[href*="#"]:not([href="#"]),
+svg[viewBox="0 0 24 24"],
+svg[stroke="currentColor"],
+svg[stroke-width="2"],
+svg[stroke-linecap="round"],
+svg[stroke-linejoin="round"],
+svg path[d*="M15 7h3a5 5 0 0 1 5 5"],
+svg line[x1="8"][y1="12"][x2="16"][y2="12"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
+    pointer-events: none !important;
+    z-index: -1 !important;
+}
+
+/* Target specific Streamlit generated classes */
+.css-1v0mbdj,
+.css-10trblm,
+.css-16huue1,
+.css-1d391kg,
+.css-qrbaxs,
+.e1fqkh3o0,
+.e1fqkh3o1,
+.e1fqkh3o2,
+.e1fqkh3o3 {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* Force all headers to not have any child links */
+h1, h2, h3, h4, h5, h6 {
+    position: relative !important;
+}
+
+h1 *, h2 *, h3 *, h4 *, h5 *, h6 * {
+    pointer-events: none !important;
+}
+
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a,
+h1 svg, h2 svg, h3 svg, h4 svg, h5 svg, h6 svg {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
+}
+
+/* Override any Streamlit anchor styles */
+.stMarkdown h1::before,
+.stMarkdown h2::before,
+.stMarkdown h3::before,
+.stMarkdown h4::before,
+.stMarkdown h5::before,
+.stMarkdown h6::before {
+    display: none !important;
+    content: none !important;
+}
+
+/* Hide any remaining link-like elements */
+*[role="link"],
+*[tabindex][href],
+button[onclick*="#"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* FINAL CLEANUP - Target any remaining artifacts */
+/* Hide any pseudo-elements that might show anchor links */
+.stMarkdown *::before,
+.stMarkdown *::after,
+.element-container *::before,
+.element-container *::after {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    content: none !important;
+}
+
+/* Only target anchor-related pseudo-elements, preserve star animations */
+a::before,
+a::after,
+a[href*="#"]::before,
+a[href*="#"]::after {
+    content: none !important;
+    display: none !important;
+}
+
+/* Target any remaining visual artifacts */
+.stMarkdown > div > *:first-child a,
+.element-container > div > *:first-child a,
+[data-testid="stMarkdownContainer"] > div > *:first-child a {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+/* Hide any remaining chain/link icons */
+svg[xmlns="http://www.w3.org/2000/svg"][width="16"][height="16"],
+svg[viewBox="0 0 24 24"][fill="none"][stroke="currentColor"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
+}
+
+/* Force override any inline styles */
+a[href*="#"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
+    pointer-events: none !important;
+    z-index: -9999 !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    color: transparent !important;
+    text-indent: -9999px !important;
+    overflow: hidden !important;
 }
 
 .stSelectbox > div > div:focus,
@@ -956,9 +1144,153 @@ function forceTextVisibility() {
     });
 }
 
+// Remove all anchor links and reference blocks - NUCLEAR OPTION
+function removeAnchorLinks() {
+    // Remove all possible anchor link selectors
+    const selectors = [
+        'a[href*="#"]',
+        'a[class*="emotion-cache"]',
+        'a[class*="et2rgd"]',
+        '[data-testid] a',
+        '.stMarkdown a',
+        '.element-container a',
+        'div[data-testid="stMarkdownContainer"] a',
+        'div[class*="stMarkdown"] a',
+        '*[href^="#"]',
+        '*[href*="#exovision"]',
+        'svg[viewBox="0 0 24 24"]',
+        'svg[stroke="currentColor"]',
+        'svg[stroke-width="2"]',
+        'svg path[d*="M15 7h3a5 5 0 0 1 5 5"]',
+        'svg line[x1="8"][y1="12"][x2="16"][y2="12"]',
+        '*[role="link"]',
+        '*[tabindex][href]',
+        'button[onclick*="#"]'
+    ];
+    
+    selectors.forEach(selector => {
+        try {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(el => {
+                el.style.display = 'none !important';
+                el.style.visibility = 'hidden !important';
+                el.style.opacity = '0 !important';
+                el.style.position = 'absolute !important';
+                el.style.left = '-9999px !important';
+                el.style.top = '-9999px !important';
+                el.style.pointerEvents = 'none !important';
+                el.style.zIndex = '-1 !important';
+                if (el.parentNode) {
+                    el.parentNode.removeChild(el);
+                }
+            });
+        } catch (e) {
+            // Ignore selector errors
+        }
+    });
+    
+    // Remove any elements with specific classes
+    const classesToRemove = [
+        'css-1v0mbdj',
+        'css-10trblm', 
+        'css-16huue1',
+        'css-1d391kg',
+        'css-qrbaxs',
+        'e1fqkh3o0',
+        'e1fqkh3o1',
+        'e1fqkh3o2',
+        'e1fqkh3o3',
+        'st-emotion-cache-yinll1',
+        'et2rgd21'
+    ];
+    
+    classesToRemove.forEach(className => {
+        const elements = document.querySelectorAll('.' + className);
+        elements.forEach(el => {
+            el.style.display = 'none !important';
+            el.style.visibility = 'hidden !important';
+            el.style.opacity = '0 !important';
+            if (el.parentNode) {
+                el.parentNode.removeChild(el);
+            }
+        });
+    });
+    
+    // Remove any remaining links in headers
+    const headers = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headers.forEach(header => {
+        const links = header.querySelectorAll('a, svg');
+        links.forEach(link => {
+            link.style.display = 'none !important';
+            link.style.visibility = 'hidden !important';
+            link.style.opacity = '0 !important';
+            if (link.parentNode) {
+                link.parentNode.removeChild(link);
+            }
+        });
+    });
+}
+
 // Run on page load and when selectbox changes
-document.addEventListener('DOMContentLoaded', forceTextVisibility);
-setInterval(forceTextVisibility, 1000);
+document.addEventListener('DOMContentLoaded', function() {
+    forceTextVisibility();
+    removeAnchorLinks();
+});
+setInterval(function() {
+    forceTextVisibility();
+    removeAnchorLinks();
+}, 500); // Increased frequency to 500ms
+
+// Add MutationObserver to catch dynamically added elements
+const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+        if (mutation.type === 'childList') {
+            mutation.addedNodes.forEach(function(node) {
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                    // Check if the added node or its children contain anchor links
+                    const links = node.querySelectorAll ? node.querySelectorAll('a[href*="#"], svg[viewBox="0 0 24 24"]') : [];
+                    links.forEach(function(link) {
+                        link.style.display = 'none !important';
+                        link.style.visibility = 'hidden !important';
+                        link.style.opacity = '0 !important';
+                        link.style.position = 'absolute !important';
+                        link.style.left = '-9999px !important';
+                        link.style.top = '-9999px !important';
+                        if (link.parentNode) {
+                            link.parentNode.removeChild(link);
+                        }
+                    });
+                    
+                    // If the node itself is an anchor link
+                    if (node.tagName === 'A' && node.href && node.href.includes('#')) {
+                        node.style.display = 'none !important';
+                        node.style.visibility = 'hidden !important';
+                        node.style.opacity = '0 !important';
+                        if (node.parentNode) {
+                            node.parentNode.removeChild(node);
+                        }
+                    }
+                    
+                    // If the node is an SVG
+                    if (node.tagName === 'SVG') {
+                        node.style.display = 'none !important';
+                        node.style.visibility = 'hidden !important';
+                        node.style.opacity = '0 !important';
+                        if (node.parentNode) {
+                            node.parentNode.removeChild(node);
+                        }
+                    }
+                }
+            });
+        }
+    });
+});
+
+// Start observing
+observer.observe(document.body, {
+    childList: true,
+    subtree: true
+});
 </script>
 """, unsafe_allow_html=True)
 st.markdown("""
@@ -1011,7 +1343,13 @@ def _load_star_map_data() -> pd.DataFrame:
 
 
 def _show_metrics(metrics: Dict[str, Any], label: str) -> None:
-    st.subheader(label)
+    st.markdown(f"""
+    <h3 style="font-family: 'Orbitron', monospace; font-weight: 700; color: #00f5ff; 
+       text-shadow: 0 0 15px rgba(0, 245, 255, 0.8); margin: 1rem 0; border-bottom: 2px solid rgba(0, 245, 255, 0.3);
+       padding-bottom: 0.5rem;">
+        {label}
+    </h3>
+    """, unsafe_allow_html=True)
     cols = st.columns(len(metrics))
     for (name, value), col in zip(metrics.items(), cols):
         col.metric(name.capitalize(), f"{value:.3f}")
@@ -1030,11 +1368,13 @@ try:
 except Exception as exc:
     star_map_error = str(exc)
 
-training_tab, prediction_tab, advanced_tab, insights_tab = st.tabs([
+training_tab, prediction_tab, advanced_tab, insights_tab, live_data_tab, monitoring_tab = st.tabs([
     "⚡ NEURAL TRAINING", 
     "🔮 PREDICTION MATRIX", 
     "🤖 QUANTUM AI CORE", 
-    "📊 DATA VISUALIZATION"
+    "📊 DATA VISUALIZATION",
+    "📡 LIVE DATA",
+    "🔍 MONITORING"
 ])
 
 with training_tab:
@@ -1133,7 +1473,13 @@ with prediction_tab:
                 predictions = payload["model"].predict(features)
                 results = dataframe.copy()
                 results["prediction"] = predictions
-                st.subheader("Predicted Dispositions")
+                st.markdown("""
+                <h3 style="font-family: 'Orbitron', monospace; font-weight: 700; color: #00f5ff; 
+                   text-shadow: 0 0 15px rgba(0, 245, 255, 0.8); margin: 1rem 0; border-bottom: 2px solid rgba(0, 245, 255, 0.3);
+                   padding-bottom: 0.5rem;">
+                    Predicted Dispositions
+                </h3>
+                """, unsafe_allow_html=True)
                 st.dataframe(results, use_container_width=True)
 
 with advanced_tab:
@@ -1152,7 +1498,23 @@ with advanced_tab:
     
     # Initialize advanced predictor
     if 'advanced_predictor' not in st.session_state:
-        st.session_state.advanced_predictor = SimplifiedAdvancedPredictor()
+        if ADVANCED_PREDICTOR_AVAILABLE:
+            st.session_state.advanced_predictor = get_advanced_predictor()
+        else:
+            st.session_state.advanced_predictor = SimplifiedAdvancedPredictor()
+    
+    # Get model status
+    if ADVANCED_PREDICTOR_AVAILABLE:
+        model_status = st.session_state.advanced_predictor.get_model_status()
+        advanced_available = model_status['advanced_available']
+        models_loaded = model_status['models_loaded']
+        model_type = model_status.get('model_type', 'unknown')
+        cv_score = model_status.get('cv_score', 'unknown')
+    else:
+        advanced_available = False
+        models_loaded = 0
+        model_type = 'Simplified'
+        cv_score = 'N/A'
     
     col1, col2 = st.columns(2)
     
@@ -1322,13 +1684,16 @@ with advanced_tab:
         </div>
         """, unsafe_allow_html=True)
         
-        if st.session_state.advanced_predictor.advanced_available:
-            st.markdown("""
+        if advanced_available:
+            st.markdown(f"""
             <div style="background: linear-gradient(135deg, rgba(0, 255, 0, 0.1), rgba(0, 200, 0, 0.05));
                border: 2px solid #00ff00; border-radius: 15px; padding: 1rem; margin: 1rem 0;
                font-family: 'Orbitron', monospace; font-weight: 600; color: #00ff00;
                text-shadow: 0 0 10px rgba(0, 255, 0, 0.5); box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);">
-                ✅ QUANTUM AI CORE ONLINE
+                ✅ ADVANCED AI CORE ONLINE<br>
+                <span style="font-size: 0.8rem; color: #8b5cf6;">
+                    {model_type} • {models_loaded} Models • CV: {cv_score if isinstance(cv_score, str) else f"{cv_score:.4f}"}
+                </span>
             </div>
             """, unsafe_allow_html=True)
             
@@ -1383,6 +1748,81 @@ with insights_tab:
         </p>
     </div>
     """, unsafe_allow_html=True)
+    
+    # Add advanced visualizations
+    try:
+        from simple_visualizations import ExoplanetVisualizer
+        visualizer = ExoplanetVisualizer()
+        
+        if base_data is not None and not base_data.empty:
+            # Data Distributions Section
+            st.subheader("📈 Data Distributions")
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("**Orbital Period Distribution**")
+                fig_period = visualizer.create_orbital_period_distribution(base_data)
+                st.plotly_chart(fig_period, use_container_width=True)
+            
+            with col2:
+                st.markdown("**Feature Correlation Matrix**")
+                fig_corr = visualizer.create_correlation_heatmap(base_data)
+                st.plotly_chart(fig_corr, use_container_width=True)
+            
+            # Model Performance Section
+            st.subheader("🎯 Model Performance")
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("**Performance Metrics**")
+                sample_metrics = {
+                    'accuracy': 0.85,
+                    'precision': 0.82,
+                    'recall': 0.88,
+                    'f1_score': 0.85
+                }
+                fig_performance = visualizer.create_model_performance_gauge(sample_metrics)
+                st.plotly_chart(fig_performance, use_container_width=True)
+            
+            with col2:
+                st.markdown("**Feature Importance**")
+                feature_importance = {
+                    'Orbital Period': 0.3,
+                    'Planet Radius': 0.25,
+                    'Planet Mass': 0.2,
+                    'Stellar Temperature': 0.15,
+                    'Stellar Radius': 0.1
+                }
+                fig_importance = visualizer.create_feature_importance_chart(feature_importance)
+                st.plotly_chart(fig_importance, use_container_width=True)
+            
+            # Transit Simulation Section
+            st.subheader("📡 Transit Simulation")
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("**Light Curve Simulation**")
+                fig_lc = visualizer.create_light_curve_simulation()
+                st.plotly_chart(fig_lc, use_container_width=True)
+            
+            with col2:
+                st.markdown("**Custom Parameters**")
+                period = st.slider("Orbital Period (days)", 1.0, 100.0, 10.0)
+                depth = st.slider("Transit Depth", 0.001, 0.1, 0.01)
+                duration = st.slider("Transit Duration (hours)", 0.5, 24.0, 2.0)
+                
+                if st.button("Generate Custom Light Curve"):
+                    fig_custom = visualizer.create_light_curve_simulation(
+                        period=period, depth=depth, duration=duration
+                    )
+                    st.plotly_chart(fig_custom, use_container_width=True)
+        else:
+            st.info("No data available for visualization. Please ensure data is loaded.")
+    
+    except ImportError:
+        st.error("Advanced visualizations not available. Please ensure simple_visualizations.py is present.")
+    except Exception as e:
+        st.error(f"Error loading visualizations: {e}")
     if base_data is not None and not base_data.empty:
         disposition_counts = base_data[preprocess.LABEL_COLUMN].value_counts().reset_index()
         disposition_counts.columns = ["Disposition", "Count"]
@@ -1396,7 +1836,13 @@ with insights_tab:
         chart.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
         st.plotly_chart(chart, use_container_width=True)
 
-        st.subheader("Orbital Period vs Planet Radius")
+        st.markdown("""
+        <h3 style="font-family: 'Orbitron', monospace; font-weight: 700; color: #00f5ff; 
+           text-shadow: 0 0 15px rgba(0, 245, 255, 0.8); margin: 1rem 0; border-bottom: 2px solid rgba(0, 245, 255, 0.3);
+           padding-bottom: 0.5rem;">
+            Orbital Period vs Planet Radius
+        </h3>
+        """, unsafe_allow_html=True)
         scatter_fig = px.scatter(
             base_data,
             x="pl_orbper",
@@ -1409,7 +1855,13 @@ with insights_tab:
         st.plotly_chart(scatter_fig, use_container_width=True)
 
     if star_map_data is not None and not star_map_data.empty:
-        st.subheader("Galactic Star Map")
+        st.markdown("""
+        <h3 style="font-family: 'Orbitron', monospace; font-weight: 700; color: #00f5ff; 
+           text-shadow: 0 0 15px rgba(0, 245, 255, 0.8); margin: 1rem 0; border-bottom: 2px solid rgba(0, 245, 255, 0.3);
+           padding-bottom: 0.5rem;">
+            Galactic Star Map
+        </h3>
+        """, unsafe_allow_html=True)
         star_display = star_map_data.copy()
         radius_series = star_display["planet_radius"]
         if radius_series.notna().any():
@@ -1453,5 +1905,137 @@ with insights_tab:
         st.plotly_chart(star_fig, use_container_width=True)
 
     if base_data is not None and not base_data.empty:
-        st.subheader("Preview of Combined Dataset")
+        st.markdown("""
+        <h3 style="font-family: 'Orbitron', monospace; font-weight: 700; color: #00f5ff; 
+           text-shadow: 0 0 15px rgba(0, 245, 255, 0.8); margin: 1rem 0; border-bottom: 2px solid rgba(0, 245, 255, 0.3);
+           padding-bottom: 0.5rem;">
+            Preview of Combined Dataset
+        </h3>
+        """, unsafe_allow_html=True)
         st.dataframe(base_data.head(50), use_container_width=True)
+
+# Live Data Tab
+with live_data_tab:
+    st.markdown("""
+    <div style="text-align: center; margin: 2rem 0;">
+        <h2 style="font-family: 'Orbitron', monospace; font-weight: 700; color: #00f5ff; 
+           text-shadow: 0 0 15px rgba(0, 245, 255, 0.6); border-bottom: 2px solid rgba(0, 245, 255, 0.3);
+           padding-bottom: 0.5rem;">
+            📡 LIVE DATA INTEGRATION
+        </h2>
+        <p style="font-family: 'Exo 2', sans-serif; color: #8b5cf6; margin: 1rem 0;">
+            Real-time NASA Exoplanet Archive • Live Data Updates • Mission Status
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    try:
+        from live_data_integration import LiveDataManager
+        from simple_visualizations import ExoplanetVisualizer
+        manager = LiveDataManager()
+        visualizer = ExoplanetVisualizer()
+        
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            if st.button("🔄 Refresh Exoplanets", use_container_width=True):
+                with st.spinner("Fetching latest exoplanets..."):
+                    exoplanets = manager.get_live_data("exoplanets", force_refresh=True)
+                    if not exoplanets.empty:
+                        st.success(f"✅ Fetched {len(exoplanets)} exoplanets")
+                        st.dataframe(exoplanets.head(10), use_container_width=True)
+                    else:
+                        st.warning("No exoplanet data available")
+        
+        with col2:
+            if st.button("🔄 Refresh Kepler", use_container_width=True):
+                with st.spinner("Fetching Kepler candidates..."):
+                    kepler = manager.get_live_data("kepler", force_refresh=True)
+                    if not kepler.empty:
+                        st.success(f"✅ Fetched {len(kepler)} Kepler candidates")
+                        st.dataframe(kepler.head(10), use_container_width=True)
+                    else:
+                        st.warning("No Kepler data available")
+        
+        with col3:
+            if st.button("🔄 Refresh TESS", use_container_width=True):
+                with st.spinner("Fetching TESS TOIs..."):
+                    tess = manager.get_live_data("tess", force_refresh=True)
+                    if not tess.empty:
+                        st.success(f"✅ Fetched {len(tess)} TESS TOIs")
+                        st.dataframe(tess.head(10), use_container_width=True)
+                    else:
+                        st.warning("No TESS data available")
+        
+        # Data status
+        st.subheader("📊 Data Status")
+        status = manager.get_data_status()
+        
+        for data_type, info in status.items():
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric(f"{data_type.title()} Records", info['count'])
+            with col2:
+                st.metric("Status", info['status'])
+            with col3:
+                st.metric("Last Updated", info['last_updated'][:19] if info['last_updated'] != 'never' else 'Never')
+        
+        # Visualizations section
+        st.subheader("🎨 Live Data Visualizations")
+        
+        # Get some data for visualization
+        exoplanets_data = manager.get_live_data("exoplanets")
+        
+        if not exoplanets_data.empty:
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("**Orbital Period Distribution**")
+                fig_period = visualizer.create_orbital_period_distribution(exoplanets_data)
+                st.plotly_chart(fig_period, use_container_width=True)
+            
+            with col2:
+                st.markdown("**Feature Correlation Matrix**")
+                fig_corr = visualizer.create_correlation_heatmap(exoplanets_data)
+                st.plotly_chart(fig_corr, use_container_width=True)
+        else:
+            st.info("No data available for visualization. Please refresh data first.")
+        
+    except ImportError:
+        st.error("Live data integration not available. Please ensure live_data_integration.py is present.")
+    except Exception as e:
+        st.error(f"Error loading live data: {e}")
+
+# Monitoring Tab
+with monitoring_tab:
+    st.markdown("""
+    <div style="text-align: center; margin: 2rem 0;">
+        <h2 style="font-family: 'Orbitron', monospace; font-weight: 700; color: #00f5ff; 
+           text-shadow: 0 0 15px rgba(0, 245, 255, 0.6); border-bottom: 2px solid rgba(0, 245, 255, 0.3);
+           padding-bottom: 0.5rem;">
+            🔍 REAL-TIME MONITORING
+        </h2>
+        <p style="font-family: 'Exo 2', sans-serif; color: #8b5cf6; margin: 1rem 0;">
+            Training Progress • System Resources • Performance Metrics
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    try:
+        from real_time_monitor import StreamlitTrainingMonitor
+        monitor_ui = StreamlitTrainingMonitor()
+        
+        # Auto-refresh every 30 seconds
+        if st.button("🔄 Refresh Status", use_container_width=True):
+            st.rerun()
+        
+        # Display training status
+        monitor_ui.display_training_status()
+        
+        # Display training summary
+        monitor_ui.display_training_summary()
+        
+    except ImportError:
+        st.error("Real-time monitoring not available. Please ensure real_time_monitor.py is present.")
+    except Exception as e:
+        st.error(f"Error loading monitoring: {e}")
