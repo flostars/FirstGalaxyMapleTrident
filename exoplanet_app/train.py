@@ -17,11 +17,11 @@ try:  # Optional dependency handled at runtime.
 except Exception:  # pragma: no cover - handled in runtime checks and missing libomp
     xgb = None
 
-import preprocess
+from . import preprocess
 
 ModelSource = Union[str, Path, bytes, IO[bytes], None]
 
-MODELS_DIR = Path(__file__).resolve().parent / "models"
+MODELS_DIR = Path(__file__).resolve().parent.parent / "models"
 MODEL_FILENAME = "exoplanet_model.pkl"
 METRICS_FILENAME = "metrics.json"
 
@@ -286,19 +286,7 @@ __all__ = [
 
 
 if __name__ == "__main__":  # pragma: no cover - convenience entry point
-    print("🚀 ExoVision AI Training Options:")
-    print("1. Basic Training (Random Forest/XGBoost)")
-    print("2. Advanced Training (Deep Learning)")
-    
-    choice = input("Select training method (1 or 2): ").strip()
-    
-    if choice == "2":
-        print("🚀 Starting Advanced Deep Learning Training...")
-        import train_advanced
-        train_advanced.main()
-    else:
-        print("🚀 Starting Basic Training...")
-        metrics = train_from_base()
-        print("Training complete. Metrics:")
-        for key, value in metrics.items():
-            print(f"  {key}: {value:.3f}")
+    metrics = train_from_base()
+    print("Training complete. Metrics:")
+    for key, value in metrics.items():
+        print(f"  {key}: {value:.3f}")
