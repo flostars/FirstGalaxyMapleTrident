@@ -2075,8 +2075,8 @@ with insights_tab:
     
     # Add advanced visualizations
     try:
-        from simple_visualizations import ExoplanetVisualizer
-        visualizer = ExoplanetVisualizer()
+        from improved_visualizations import ImprovedExoplanetVisualizer
+        visualizer = ImprovedExoplanetVisualizer()
         
         if base_data is not None and not base_data.empty:
             # Data Distributions Section
@@ -2085,12 +2085,12 @@ with insights_tab:
             
             with col1:
                 st.markdown("**Orbital Period Distribution**")
-                fig_period = visualizer.create_orbital_period_distribution(base_data)
+                fig_period = visualizer.create_improved_orbital_period_distribution(base_data)
                 st.plotly_chart(fig_period, use_container_width=True)
             
             with col2:
                 st.markdown("**Feature Correlation Matrix**")
-                fig_corr = visualizer.create_correlation_heatmap(base_data)
+                fig_corr = visualizer.create_enhanced_correlation_heatmap(base_data)
                 st.plotly_chart(fig_corr, use_container_width=True)
             
             # Model Performance Section
@@ -2120,26 +2120,6 @@ with insights_tab:
                 fig_importance = visualizer.create_feature_importance_chart(feature_importance)
                 st.plotly_chart(fig_importance, use_container_width=True)
             
-            # Transit Simulation Section
-            st.subheader("📡 Transit Simulation")
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                st.markdown("**Light Curve Simulation**")
-                fig_lc = visualizer.create_light_curve_simulation()
-                st.plotly_chart(fig_lc, use_container_width=True)
-            
-            with col2:
-                st.markdown("**Custom Parameters**")
-                period = st.slider("Orbital Period (days)", 1.0, 100.0, 10.0)
-                depth = st.slider("Transit Depth", 0.001, 0.1, 0.01)
-                duration = st.slider("Transit Duration (hours)", 0.5, 24.0, 2.0)
-                
-                if st.button("Generate Custom Light Curve"):
-                    fig_custom = visualizer.create_light_curve_simulation(
-                        period=period, depth=depth, duration=duration
-                    )
-                    st.plotly_chart(fig_custom, use_container_width=True)
         else:
             st.info("No data available for visualization. Please ensure data is loaded.")
     
@@ -2224,23 +2204,8 @@ with insights_tab:
             Orbital Period vs Planet Radius
         </h3>
         """, unsafe_allow_html=True)
-        scatter_fig = px.scatter(
-            base_data,
-            x="pl_orbper",
-            y="pl_rade",
-            color=preprocess.LABEL_COLUMN,
-            title="Orbital Period vs Planet Radius Analysis",
-            hover_data=["pl_eqt", "pl_insol", "st_teff", "st_rad"],
-            color_discrete_sequence=[
-                "#00f5ff",  # Cyan
-                "#8b5cf6",  # Purple
-                "#10b981",  # Emerald
-                "#f59e0b",  # Amber
-                "#ef4444"   # Red
-            ],
-            size_max=15,
-            opacity=0.7
-        )
+        # Use improved scatter plot
+        scatter_fig = visualizer.create_improved_scatter_plot(base_data)
         scatter_fig.update_layout(
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
@@ -2307,29 +2272,8 @@ with insights_tab:
             lambda val: str(int(val)) if pd.notna(val) else "Unknown"
         )
         star_display["identifier"] = star_display["identifier"].fillna("N/A")
-        star_fig = px.scatter(
-            star_display,
-            x="ra",
-            y="dec",
-            color="discovery_year_label",
-            size="radius_display",
-            size_max=20,
-            hover_name="identifier",
-            hover_data={
-                "dataset": True,
-                preprocess.LABEL_COLUMN: True,
-                "planet_radius": True,
-                "discovery_year": True,
-            },
-            labels={
-                "ra": "Right Ascension (deg)",
-                "dec": "Declination (deg)",
-                "discovery_year_label": "Discovery Year",
-                "radius_display": "Radius (Earth radii)",
-            },
-            title="Galactic Star Map - Exoplanet Discovery Timeline",
-            color_discrete_sequence=px.colors.qualitative.Pastel
-        )
+        # Use improved star map
+        star_fig = visualizer.create_improved_star_map(star_display)
         star_fig.update_layout(
             xaxis=dict(
                 range=[360, 0],
@@ -2378,15 +2322,6 @@ with insights_tab:
         )
         st.plotly_chart(star_fig, use_container_width=True)
 
-    if base_data is not None and not base_data.empty:
-        st.markdown("""
-        <h3 style="font-family: 'Orbitron', monospace; font-weight: 700; color: #00f5ff; 
-           text-shadow: 0 0 15px rgba(0, 245, 255, 0.8); margin: 1rem 0; border-bottom: 2px solid rgba(0, 245, 255, 0.3);
-           padding-bottom: 0.5rem;">
-            Preview of Combined Dataset
-        </h3>
-        """, unsafe_allow_html=True)
-        st.dataframe(base_data.head(50), use_container_width=True)
 
 # Live Data Tab
 with live_data_tab:
