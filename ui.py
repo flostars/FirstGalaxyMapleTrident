@@ -1368,9 +1368,8 @@ try:
 except Exception as exc:
     star_map_error = str(exc)
 
-training_tab, prediction_tab, advanced_tab, insights_tab, live_data_tab, monitoring_tab = st.tabs([
-    "⚡ NEURAL TRAINING", 
-    "🔮 PREDICTION MATRIX", 
+training_tab, advanced_tab, insights_tab, live_data_tab, monitoring_tab = st.tabs([
+    "⚡ NEURAL TRAINING & PREDICTION", 
     "🤖 QUANTUM AI CORE", 
     "📊 DATA VISUALIZATION",
     "📡 LIVE DATA",
@@ -1383,17 +1382,27 @@ with training_tab:
         <h2 style="font-family: 'Orbitron', monospace; font-weight: 700; color: #00f5ff; 
            text-shadow: 0 0 15px rgba(0, 245, 255, 0.6); border-bottom: 2px solid rgba(0, 245, 255, 0.3);
            padding-bottom: 0.5rem;">
-            ⚡ NEURAL TRAINING
+            ⚡ NEURAL TRAINING & PREDICTION
         </h2>
         <p style="font-family: 'Exo 2', sans-serif; color: #8b5cf6; margin: 1rem 0;">
-            Machine Learning Model Training • Algorithm Selection • Performance Optimization
+            Complete ML Pipeline • Train → Test → Evaluate • Performance Optimization
         </p>
     </div>
     """, unsafe_allow_html=True)
+    
+    # Training Section
+    st.markdown("""
+    <h3 style="font-family: 'Orbitron', monospace; font-weight: 700; color: #00f5ff; 
+       text-shadow: 0 0 15px rgba(0, 245, 255, 0.8); margin: 1rem 0; border-bottom: 2px solid rgba(0, 245, 255, 0.3);
+       padding-bottom: 0.5rem;">
+        🧠 MODEL TRAINING
+    </h3>
+    """, unsafe_allow_html=True)
+    
     algorithm_label = st.selectbox("Model selection", ("Random Forest (baseline)", "XGBoost"))
     algorithm_key = "random_forest" if "Random Forest" in algorithm_label else "xgboost"
     base_model_file = st.file_uploader("Upload base model (optional)", type=("pkl", "joblib"), key="base_model")
-    training_file = st.file_uploader("Upload CSV for retraining (optional)", type="csv")
+    training_file = st.file_uploader("Upload CSV for retraining (optional)", type="csv", key="training_data")
 
     if st.button("Train / Retrain", use_container_width=True):
         with st.spinner("Training model..."):
@@ -1424,20 +1433,16 @@ with training_tab:
         _show_metrics(past_metrics, "Stored Metrics")
     except FileNotFoundError:
         pass
-
-with prediction_tab:
+    
+    # Prediction Section
     st.markdown("""
-    <div style="text-align: center; margin: 2rem 0;">
-        <h2 style="font-family: 'Orbitron', monospace; font-weight: 700; color: #00f5ff; 
-           text-shadow: 0 0 15px rgba(0, 245, 255, 0.6); border-bottom: 2px solid rgba(0, 245, 255, 0.3);
-           padding-bottom: 0.5rem;">
-            🔮 PREDICTION MATRIX
-        </h2>
-        <p style="font-family: 'Exo 2', sans-serif; color: #8b5cf6; margin: 1rem 0;">
-            Advanced Exoplanet Classification • Multi-Feature Analysis • Real-Time Processing
-        </p>
-    </div>
+    <h3 style="font-family: 'Orbitron', monospace; font-weight: 700; color: #00f5ff; 
+       text-shadow: 0 0 15px rgba(0, 245, 255, 0.8); margin: 2rem 0 1rem 0; border-bottom: 2px solid rgba(0, 245, 255, 0.3);
+       padding-bottom: 0.5rem;">
+        🔮 MODEL PREDICTION & EVALUATION
+    </h3>
     """, unsafe_allow_html=True)
+    
     st.markdown("""
     <div class="prediction-matrix-text">
         Upload a CSV containing the eleven numeric features used for training:
@@ -1457,7 +1462,8 @@ with prediction_tab:
         Extra columns are optional and will be echoed back alongside predictions.
     </div>
     """, unsafe_allow_html=True)
-    prediction_file = st.file_uploader("Upload CSV for prediction", type="csv", key="prediction")
+    
+    prediction_file = st.file_uploader("Upload CSV for prediction", type="csv", key="prediction_training")
 
     if st.button("Run Prediction", use_container_width=True):
         if prediction_file is None:
@@ -1474,13 +1480,191 @@ with prediction_tab:
                 results = dataframe.copy()
                 results["prediction"] = predictions
                 st.markdown("""
-                <h3 style="font-family: 'Orbitron', monospace; font-weight: 700; color: #00f5ff; 
+                <h4 style="font-family: 'Orbitron', monospace; font-weight: 700; color: #00f5ff; 
                    text-shadow: 0 0 15px rgba(0, 245, 255, 0.8); margin: 1rem 0; border-bottom: 2px solid rgba(0, 245, 255, 0.3);
                    padding-bottom: 0.5rem;">
                     Predicted Dispositions
-                </h3>
+                </h4>
                 """, unsafe_allow_html=True)
                 st.dataframe(results, use_container_width=True)
+                
+                # Download results
+                csv = results.to_csv(index=False)
+                st.download_button(
+                    label="📥 Download Prediction Results",
+                    data=csv,
+                    file_name="prediction_results.csv",
+                    mime="text/csv"
+                )
+    
+    # Advanced Analytics Dashboard Section
+    st.markdown("""
+    <h3 style="font-family: 'Orbitron', monospace; font-weight: 700; color: #00f5ff; 
+       text-shadow: 0 0 15px rgba(0, 245, 255, 0.8); margin: 2rem 0 1rem 0; border-bottom: 2px solid rgba(0, 245, 255, 0.3);
+       padding-bottom: 0.5rem;">
+        📊 ADVANCED ANALYTICS DASHBOARD
+    </h3>
+    """, unsafe_allow_html=True)
+    
+    # Model Performance Analytics
+    st.markdown("""
+    <h4 style="font-family: 'Orbitron', monospace; font-weight: 600; color: #8b5cf6; 
+       text-shadow: 0 0 10px rgba(139, 92, 246, 0.8); margin: 1rem 0;">
+        📈 MODEL PERFORMANCE ANALYTICS
+    </h4>
+    """, unsafe_allow_html=True)
+    
+    # Try to get model metrics for analysis
+    try:
+        metrics = train.get_stored_metrics()
+        
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("Accuracy", f"{metrics['accuracy']:.3f}")
+        with col2:
+            st.metric("Recall", f"{metrics['recall']:.3f}")
+        with col3:
+            st.metric("F1 Score", f"{metrics['f1']:.3f}")
+        with col4:
+            precision = metrics.get('precision', 'N/A')
+            if isinstance(precision, (int, float)):
+                st.metric("Precision", f"{precision:.3f}")
+            else:
+                st.metric("Precision", "N/A")
+        
+        # Performance visualization
+        if base_data is not None and not base_data.empty:
+            st.markdown("""
+            <h4 style="font-family: 'Orbitron', monospace; font-weight: 600; color: #8b5cf6; 
+               text-shadow: 0 0 10px rgba(139, 92, 246, 0.8); margin: 1rem 0;">
+                📊 CLASS DISTRIBUTION ANALYSIS
+            </h4>
+            """, unsafe_allow_html=True)
+            
+            # Class distribution
+            if preprocess.LABEL_COLUMN in base_data.columns:
+                disposition_counts = base_data[preprocess.LABEL_COLUMN].value_counts().reset_index()
+                disposition_counts.columns = ["Disposition", "Count"]
+                chart = px.pie(
+                    disposition_counts,
+                    values="Count",
+                    names="Disposition",
+                    title="Training Data Class Distribution",
+                    color_discrete_sequence=px.colors.qualitative.Set3
+                )
+                chart.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
+                st.plotly_chart(chart, use_container_width=True)
+        
+    except FileNotFoundError:
+        st.info("No trained model found. Train a model above to see performance analytics.")
+    
+    # Feature Importance Analysis
+    st.markdown("""
+    <h4 style="font-family: 'Orbitron', monospace; font-weight: 600; color: #8b5cf6; 
+       text-shadow: 0 0 10px rgba(139, 92, 246, 0.8); margin: 1rem 0;">
+        🔬 FEATURE IMPORTANCE ANALYSIS
+    </h4>
+    """, unsafe_allow_html=True)
+    
+    if base_data is not None and not base_data.empty:
+        # Calculate correlation with target
+        if preprocess.LABEL_COLUMN in base_data.columns:
+            # Convert target to numeric for correlation - fix the numpy array issue
+            target_numeric = pd.Series(pd.Categorical(base_data[preprocess.LABEL_COLUMN]).codes)
+            correlations = {}
+            
+            for feature in preprocess.FEATURE_COLUMNS:
+                if feature in base_data.columns:
+                    try:
+                        corr = abs(base_data[feature].corr(target_numeric))
+                        correlations[feature] = corr if not pd.isna(corr) else 0.0
+                    except:
+                        correlations[feature] = 0.0
+            
+            # Sort by importance
+            sorted_features = sorted(correlations.items(), key=lambda x: x[1], reverse=True)
+            
+            # Create feature importance chart
+            feature_names = [f.replace('_', ' ').title() for f, _ in sorted_features[:8]]
+            importance_values = [v for _, v in sorted_features[:8]]
+            
+            fig = px.bar(
+                x=importance_values,
+                y=feature_names,
+                orientation='h',
+                title="Feature Importance (Correlation with Target)",
+                color=importance_values,
+                color_continuous_scale="viridis"
+            )
+            fig.update_layout(
+                paper_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor="rgba(0,0,0,0)",
+                yaxis={'categoryorder': 'total ascending'}
+            )
+            st.plotly_chart(fig, use_container_width=True)
+    
+    # Prediction History and Analytics
+    st.markdown("""
+    <h4 style="font-family: 'Orbitron', monospace; font-weight: 600; color: #8b5cf6; 
+       text-shadow: 0 0 10px rgba(139, 92, 246, 0.8); margin: 1rem 0;">
+        📋 PREDICTION HISTORY & ANALYTICS
+    </h4>
+    """, unsafe_allow_html=True)
+    
+    # Upload historical predictions for analysis
+    historical_file = st.file_uploader("Upload Historical Prediction Results for Analysis", type="csv", key="historical_analytics")
+    
+    if historical_file is not None:
+        try:
+            historical_data = pd.read_csv(historical_file)
+            
+            if 'prediction' in historical_data.columns:
+                # Prediction distribution
+                pred_counts = historical_data['prediction'].value_counts()
+                fig_pred = px.pie(
+                    values=pred_counts.values,
+                    names=pred_counts.index,
+                    title="Historical Prediction Distribution"
+                )
+                fig_pred.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
+                st.plotly_chart(fig_pred, use_container_width=True)
+                
+                # Show summary statistics
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Total Predictions", len(historical_data))
+                with col2:
+                    exoplanet_count = (historical_data['prediction'] == 'CONFIRMED').sum() if 'CONFIRMED' in historical_data['prediction'].values else 0
+                    st.metric("Exoplanet Predictions", exoplanet_count)
+                with col3:
+                    st.metric("Non-Exoplanet Predictions", len(historical_data) - exoplanet_count)
+                
+                # Display sample of historical data
+                st.markdown("**Sample Historical Predictions:**")
+                st.dataframe(historical_data.head(10), use_container_width=True)
+            
+        except Exception as e:
+            st.error(f"Error analyzing historical data: {e}")
+    
+    # Model Comparison Tools
+    st.markdown("""
+    <h4 style="font-family: 'Orbitron', monospace; font-weight: 600; color: #8b5cf6; 
+       text-shadow: 0 0 10px rgba(139, 92, 246, 0.8); margin: 1rem 0;">
+        ⚖️ MODEL COMPARISON TOOLS
+    </h4>
+    """, unsafe_allow_html=True)
+    
+    st.info("""
+    **Model Comparison Features:**
+    - Compare different algorithms (Random Forest vs XGBoost)
+    - Analyze performance across different feature sets
+    - Evaluate model stability over time
+    - Generate comprehensive model reports
+    """)
+    
+    if st.button("🔄 Refresh Analytics", use_container_width=True):
+        st.rerun()
+
 
 with advanced_tab:
     st.markdown("""
@@ -1622,11 +1806,34 @@ with advanced_tab:
                     🔬 FEATURE IMPORTANCE
                 </h4>
                 """, unsafe_allow_html=True)
-                importance_col1, importance_col2 = st.columns(2)
-                with importance_col1:
-                    st.metric("Light Curve", f"{result['feature_importance']['light_curve']:.1%}")
-                with importance_col2:
-                    st.metric("Stellar Features", f"{np.mean(result['feature_importance']['stellar_features']):.1%}")
+                
+                # Handle different feature importance structures
+                feature_importance = result.get('feature_importance', {})
+                
+                if 'light_curve' in feature_importance:
+                    # Simple predictor structure
+                    importance_col1, importance_col2 = st.columns(2)
+                    with importance_col1:
+                        st.metric("Light Curve", f"{feature_importance['light_curve']:.1%}")
+                    with importance_col2:
+                        stellar_importance = feature_importance.get('stellar_features', [0.2] * 11)
+                        if isinstance(stellar_importance, list):
+                            avg_stellar = np.mean(stellar_importance)
+                        else:
+                            avg_stellar = stellar_importance
+                        st.metric("Stellar Features", f"{avg_stellar:.1%}")
+                elif 'orbital_features' in feature_importance:
+                    # Enhanced predictor structure
+                    importance_col1, importance_col2, importance_col3 = st.columns(3)
+                    with importance_col1:
+                        st.metric("Orbital Features", f"{feature_importance['orbital_features']:.1%}")
+                    with importance_col2:
+                        st.metric("Stellar Features", f"{feature_importance['stellar_features']:.1%}")
+                    with importance_col3:
+                        st.metric("Engineered Features", f"{feature_importance['engineered_features']:.1%}")
+                else:
+                    # Fallback if structure is unknown
+                    st.info("Feature importance not available for this model.")
     
     with col2:
         st.markdown("""
