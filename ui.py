@@ -1550,9 +1550,48 @@ with training_tab:
                     values="Count",
                     names="Disposition",
                     title="Training Data Class Distribution",
-                    color_discrete_sequence=px.colors.qualitative.Set3
+                    color_discrete_sequence=[
+                        "#00f5ff",  # Cyan
+                        "#8b5cf6",  # Purple
+                        "#10b981",  # Emerald
+                        "#f59e0b",  # Amber
+                        "#ef4444",  # Red
+                        "#06b6d4"   # Sky
+                    ]
                 )
-                chart.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
+                chart.update_layout(
+                    paper_bgcolor="rgba(0,0,0,0)",
+                    plot_bgcolor="rgba(0,0,0,0)",
+                    font=dict(
+                        family="'Exo 2', sans-serif",
+                        size=12,
+                        color="#ffffff"
+                    ),
+                    title_font=dict(
+                        family="'Orbitron', monospace",
+                        size=16,
+                        color="#00f5ff"
+                    ),
+                    legend=dict(
+                        bgcolor="rgba(0,0,0,0.8)",
+                        bordercolor="#8b5cf6",
+                        borderwidth=1,
+                        font=dict(color="#ffffff", family="'Exo 2', sans-serif")
+                    ),
+                    margin=dict(l=20, r=20, t=60, b=20)
+                )
+                chart.update_traces(
+                    textposition='inside',
+                    textinfo='percent+label',
+                    textfont=dict(
+                        family="'Exo 2', sans-serif",
+                        size=11,
+                        color="#ffffff"
+                    ),
+                    marker=dict(
+                        line=dict(color='#1a1a1a', width=2)
+                    )
+                )
                 st.plotly_chart(chart, use_container_width=True)
         
     except FileNotFoundError:
@@ -1594,12 +1633,51 @@ with training_tab:
                 orientation='h',
                 title="Feature Importance (Correlation with Target)",
                 color=importance_values,
-                color_continuous_scale="viridis"
+                color_continuous_scale=[[0, "#1a1a1a"], [0.5, "#8b5cf6"], [1, "#00f5ff"]]
             )
             fig.update_layout(
                 paper_bgcolor="rgba(0,0,0,0)",
                 plot_bgcolor="rgba(0,0,0,0)",
-                yaxis={'categoryorder': 'total ascending'}
+                font=dict(
+                    family="'Exo 2', sans-serif",
+                    size=12,
+                    color="#ffffff"
+                ),
+                title_font=dict(
+                    family="'Orbitron', monospace",
+                    size=16,
+                    color="#00f5ff"
+                ),
+                xaxis=dict(
+                    gridcolor="rgba(139, 92, 246, 0.3)",
+                    gridwidth=1,
+                    showgrid=True,
+                    color="#ffffff",
+                    title_font=dict(family="'Exo 2', sans-serif", size=12)
+                ),
+                yaxis=dict(
+                    gridcolor="rgba(139, 92, 246, 0.3)",
+                    gridwidth=1,
+                    showgrid=True,
+                    color="#ffffff",
+                    title_font=dict(family="'Exo 2', sans-serif", size=12),
+                    categoryorder='total ascending'
+                ),
+                margin=dict(l=20, r=20, t=60, b=20),
+                showlegend=False
+            )
+            fig.update_traces(
+                marker=dict(
+                    line=dict(color='#8b5cf6', width=1),
+                    opacity=0.8
+                ),
+                texttemplate='%{x:.3f}',
+                textposition='outside',
+                textfont=dict(
+                    family="'Exo 2', sans-serif",
+                    size=10,
+                    color="#ffffff"
+                )
             )
             st.plotly_chart(fig, use_container_width=True)
     
@@ -1624,9 +1702,48 @@ with training_tab:
                 fig_pred = px.pie(
                     values=pred_counts.values,
                     names=pred_counts.index,
-                    title="Historical Prediction Distribution"
+                    title="Historical Prediction Distribution",
+                    color_discrete_sequence=[
+                        "#00f5ff",  # Cyan
+                        "#8b5cf6",  # Purple
+                        "#10b981",  # Emerald
+                        "#f59e0b",  # Amber
+                        "#ef4444"   # Red
+                    ]
                 )
-                fig_pred.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
+                fig_pred.update_layout(
+                    paper_bgcolor="rgba(0,0,0,0)",
+                    plot_bgcolor="rgba(0,0,0,0)",
+                    font=dict(
+                        family="'Exo 2', sans-serif",
+                        size=12,
+                        color="#ffffff"
+                    ),
+                    title_font=dict(
+                        family="'Orbitron', monospace",
+                        size=16,
+                        color="#00f5ff"
+                    ),
+                    legend=dict(
+                        bgcolor="rgba(0,0,0,0.8)",
+                        bordercolor="#8b5cf6",
+                        borderwidth=1,
+                        font=dict(color="#ffffff", family="'Exo 2', sans-serif")
+                    ),
+                    margin=dict(l=20, r=20, t=60, b=20)
+                )
+                fig_pred.update_traces(
+                    textposition='inside',
+                    textinfo='percent+label',
+                    textfont=dict(
+                        family="'Exo 2', sans-serif",
+                        size=11,
+                        color="#ffffff"
+                    ),
+                    marker=dict(
+                        line=dict(color='#1a1a1a', width=2)
+                    )
+                )
                 st.plotly_chart(fig_pred, use_container_width=True)
                 
                 # Show summary statistics
@@ -2039,8 +2156,65 @@ with insights_tab:
             y="Count",
             title="Distribution of Planet Candidates by Status",
             color="Disposition",
+            color_discrete_sequence=[
+                "#00f5ff",  # Cyan
+                "#8b5cf6",  # Purple
+                "#10b981",  # Emerald
+                "#f59e0b",  # Amber
+                "#ef4444",  # Red
+                "#06b6d4"   # Sky
+            ]
         )
-        chart.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
+        chart.update_layout(
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            font=dict(
+                family="'Exo 2', sans-serif",
+                size=12,
+                color="#ffffff"
+            ),
+            title_font=dict(
+                family="'Orbitron', monospace",
+                size=18,
+                color="#00f5ff"
+            ),
+            xaxis=dict(
+                gridcolor="rgba(139, 92, 246, 0.3)",
+                gridwidth=1,
+                showgrid=True,
+                color="#ffffff",
+                title_font=dict(family="'Exo 2', sans-serif", size=14),
+                tickfont=dict(family="'Exo 2', sans-serif", size=11)
+            ),
+            yaxis=dict(
+                gridcolor="rgba(139, 92, 246, 0.3)",
+                gridwidth=1,
+                showgrid=True,
+                color="#ffffff",
+                title_font=dict(family="'Exo 2', sans-serif", size=14),
+                tickfont=dict(family="'Exo 2', sans-serif", size=11)
+            ),
+            margin=dict(l=20, r=20, t=80, b=20),
+            legend=dict(
+                bgcolor="rgba(0,0,0,0.8)",
+                bordercolor="#8b5cf6",
+                borderwidth=1,
+                font=dict(color="#ffffff", family="'Exo 2', sans-serif")
+            )
+        )
+        chart.update_traces(
+            marker=dict(
+                line=dict(color='#1a1a1a', width=2),
+                opacity=0.8
+            ),
+            texttemplate='%{y}',
+            textposition='outside',
+            textfont=dict(
+                family="'Exo 2', sans-serif",
+                size=11,
+                color="#ffffff"
+            )
+        )
         st.plotly_chart(chart, use_container_width=True)
 
         st.markdown("""
@@ -2055,10 +2229,63 @@ with insights_tab:
             x="pl_orbper",
             y="pl_rade",
             color=preprocess.LABEL_COLUMN,
-            title="Verification Dataset View",
+            title="Orbital Period vs Planet Radius Analysis",
             hover_data=["pl_eqt", "pl_insol", "st_teff", "st_rad"],
+            color_discrete_sequence=[
+                "#00f5ff",  # Cyan
+                "#8b5cf6",  # Purple
+                "#10b981",  # Emerald
+                "#f59e0b",  # Amber
+                "#ef4444"   # Red
+            ],
+            size_max=15,
+            opacity=0.7
         )
-        scatter_fig.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
+        scatter_fig.update_layout(
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            font=dict(
+                family="'Exo 2', sans-serif",
+                size=12,
+                color="#ffffff"
+            ),
+            title_font=dict(
+                family="'Orbitron', monospace",
+                size=18,
+                color="#00f5ff"
+            ),
+            xaxis=dict(
+                gridcolor="rgba(139, 92, 246, 0.3)",
+                gridwidth=1,
+                showgrid=True,
+                color="#ffffff",
+                title="Orbital Period (days)",
+                title_font=dict(family="'Exo 2', sans-serif", size=14),
+                tickfont=dict(family="'Exo 2', sans-serif", size=11)
+            ),
+            yaxis=dict(
+                gridcolor="rgba(139, 92, 246, 0.3)",
+                gridwidth=1,
+                showgrid=True,
+                color="#ffffff",
+                title="Planet Radius (Earth radii)",
+                title_font=dict(family="'Exo 2', sans-serif", size=14),
+                tickfont=dict(family="'Exo 2', sans-serif", size=11)
+            ),
+            margin=dict(l=20, r=20, t=80, b=20),
+            legend=dict(
+                bgcolor="rgba(0,0,0,0.8)",
+                bordercolor="#8b5cf6",
+                borderwidth=1,
+                font=dict(color="#ffffff", family="'Exo 2', sans-serif")
+            )
+        )
+        scatter_fig.update_traces(
+            marker=dict(
+                line=dict(color='#1a1a1a', width=1),
+                opacity=0.8
+            )
+        )
         st.plotly_chart(scatter_fig, use_container_width=True)
 
     if star_map_data is not None and not star_map_data.empty:
@@ -2086,7 +2313,7 @@ with insights_tab:
             y="dec",
             color="discovery_year_label",
             size="radius_display",
-            size_max=18,
+            size_max=20,
             hover_name="identifier",
             hover_data={
                 "dataset": True,
@@ -2100,14 +2327,54 @@ with insights_tab:
                 "discovery_year_label": "Discovery Year",
                 "radius_display": "Radius (Earth radii)",
             },
-            title="Star Map from Training Catalogues",
+            title="Galactic Star Map - Exoplanet Discovery Timeline",
+            color_discrete_sequence=px.colors.qualitative.Pastel
         )
         star_fig.update_layout(
-            xaxis=dict(range=[360, 0]),
-            yaxis_title="Declination (deg)",
-            xaxis_title="Right Ascension (deg)",
+            xaxis=dict(
+                range=[360, 0],
+                gridcolor="rgba(139, 92, 246, 0.3)",
+                gridwidth=1,
+                showgrid=True,
+                color="#ffffff",
+                title="Right Ascension (deg)",
+                title_font=dict(family="'Exo 2', sans-serif", size=14),
+                tickfont=dict(family="'Exo 2', sans-serif", size=11)
+            ),
+            yaxis=dict(
+                gridcolor="rgba(139, 92, 246, 0.3)",
+                gridwidth=1,
+                showgrid=True,
+                color="#ffffff",
+                title="Declination (deg)",
+                title_font=dict(family="'Exo 2', sans-serif", size=14),
+                tickfont=dict(family="'Exo 2', sans-serif", size=11)
+            ),
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
+            font=dict(
+                family="'Exo 2', sans-serif",
+                size=12,
+                color="#ffffff"
+            ),
+            title_font=dict(
+                family="'Orbitron', monospace",
+                size=18,
+                color="#00f5ff"
+            ),
+            margin=dict(l=20, r=20, t=80, b=20),
+            legend=dict(
+                bgcolor="rgba(0,0,0,0.8)",
+                bordercolor="#8b5cf6",
+                borderwidth=1,
+                font=dict(color="#ffffff", family="'Exo 2', sans-serif")
+            )
+        )
+        star_fig.update_traces(
+            marker=dict(
+                line=dict(color='#1a1a1a', width=1),
+                opacity=0.8
+            )
         )
         st.plotly_chart(star_fig, use_container_width=True)
 
